@@ -1,0 +1,24 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "ETL",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/etl.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        },
+        {
+            "name": "Create Tables",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/create_tables.py",
+            "console": "integratedTerminal",
+            "justMyCode": true
+        }
+    ]
+}
