@@ -36,7 +36,8 @@
 				"WakaTime.vscode-wakatime",
 				"inferrinizzard.prettier-sql-vscode",
 				"njpwerner.autodocstring",
-				"yzhang.markdown-all-in-one"
+				"yzhang.markdown-all-in-one",
+				"mhutchie.git-graph"
 			]
 		}
 	},

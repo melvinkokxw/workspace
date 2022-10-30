@@ -10,7 +10,8 @@
             "request": "launch",
             "program": "${workspaceFolder}/etl.py",
             "console": "integratedTerminal",
-            "justMyCode": true
+            "justMyCode": true,
+            "preLaunchTask": "Create Tables"
         },
         {
             "name": "Create Tables",
