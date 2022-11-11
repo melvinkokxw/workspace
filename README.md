@@ -1,10 +1,3 @@
-Do the following steps in your README.md file.
-- Discuss the purpose of this database in the context of the startup, Sparkify, and their analytical goals.
-- How to run the Python scripts
-- An explanation of the files in the repository
-- State and justify your database schema design and ETL pipeline.
-- [Optional] Provide example queries and results for song play analysis.
-
 # Data Modeling with Postgres
 
 This database was created to query song play data easily. The main analytical goal is understanding what songs users are listening to. This is not possible currently without the database as the song play log and metadata is stored as JSON files.
