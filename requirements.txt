@@ -10,7 +10,7 @@ ipython==8.5.0
 ipython-genutils==0.2.0
 ipython-sql==0.4.1
 jedi==0.18.1
-jupyter-core==4.11.1
+jupyter-core==4.11.2
 jupyter_client==7.4.2
 matplotlib-inline==0.1.6
 nest-asyncio==1.5.6
