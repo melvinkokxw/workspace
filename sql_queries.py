@@ -8,60 +8,162 @@ time_table_drop = "DROP TABLE IF EXISTS time"
 
 # CREATE TABLES
 
-songplay_table_create = ("""
-CREATE TABLE IF NOT EXISTS songplays (songplay_id serial PRIMARY KEY, start_time timestamp, user_id int, level varchar, song_id varchar, artist_id varchar, session_id int, location varchar, user_agent varchar)
-""")
+songplay_table_create = """
+CREATE TABLE IF NOT EXISTS
+    songplays (
+        songplay_id serial PRIMARY KEY,
+        start_time TIMESTAMP NOT NULL,
+        user_id INT NOT NULL,
+        level VARCHAR,
+        song_id VARCHAR,
+        artist_id VARCHAR,
+        session_id INT,
+        location VARCHAR,
+        user_agent VARCHAR
+    )
+"""
 
-user_table_create = ("""
-CREATE TABLE IF NOT EXISTS users (user_id int PRIMARY KEY, first_name varchar, last_name varchar, gender varchar, level varchar)
-""")
+user_table_create = """
+CREATE TABLE IF NOT EXISTS
+    users (
+        user_id INT PRIMARY KEY,
+        first_name VARCHAR,
+        last_name VARCHAR,
+        gender VARCHAR,
+        level VARCHAR
+    )
+"""
 
 song_table_create = ("""
-CREATE TABLE IF NOT EXISTS songs (song_id varchar PRIMARY KEY, title varchar, artist_id varchar, year int, duration numeric)
+CREATE TABLE IF NOT EXISTS
+    songs (
+        song_id VARCHAR PRIMARY KEY,
+        title VARCHAR NOT NULL,
+        artist_id VARCHAR,
+        year INT,
+        duration NUMERIC NOT NULL
+    )
 """)
 
-artist_table_create = ("""
-CREATE TABLE IF NOT EXISTS artists (artist_id varchar PRIMARY KEY, name varchar, location varchar, latitude numeric, longitude numeric)
-""")
+artist_table_create = """
+CREATE TABLE IF NOT EXISTS
+    artists (
+        artist_id VARCHAR PRIMARY KEY,
+        name VARCHAR NOT NULL,
+        location VARCHAR,
+        latitude DOUBLE PRECISION,
+        longitude DOUBLE PRECISION
+    )
+"""
 
-time_table_create = ("""
-CREATE TABLE IF NOT EXISTS time (start_time timestamp, hour int, day int, week int, month int, year int, weekday int)
-""")
+time_table_create = """
+CREATE TABLE IF NOT EXISTS
+    time (
+        start_time TIMESTAMP PRIMARY KEY,
+        hour INT,
+        day INT,
+        week INT,
+        month INT,
+        year INT,
+        weekday INT
+    )
+"""
 
 # INSERT RECORDS
 
-songplay_table_insert = ("""
-INSERT INTO songplays (songplay_id, start_time, user_id, level, song_id, artist_id, session_id, location, user_agent) VALUES (DEFAULT, %s, %s, %s, %s, %s, %s, %s, %s)
-ON CONFLICT DO NOTHING
-""")
+songplay_table_insert = """
+INSERT INTO
+    songplays (
+        songplay_id,
+        start_time,
+        user_id,
+        level,
+        song_id,
+        artist_id,
+        session_id,
+        location,
+        user_agent
+    )
+VALUES
+    (DEFAULT, %s, %s, %s, %s, %s, %s, %s, %s) ON CONFLICT (songplay_id)
+DO
+UPDATE
+SET
+    start_time = COALESCE(EXCLUDED.start_time, songplays.start_time),
+    user_id = COALESCE(EXCLUDED.user_id, songplays.user_id),
+    level = COALESCE(EXCLUDED.level, songplays.level),
+    song_id = COALESCE(EXCLUDED.song_id, songplays.song_id),
+    artist_id = COALESCE(EXCLUDED.artist_id, songplays.artist_id),
+    session_id = COALESCE(EXCLUDED.session_id, songplays.session_id),
+    location = COALESCE(EXCLUDED.location, songplays.location),
+    user_agent = COALESCE(EXCLUDED.user_agent, songplays.user_agent)
+"""
 
-user_table_insert = ("""
-INSERT INTO users (user_id, first_name, last_name, gender, level) VALUES (%s, %s, %s, %s, %s)
-ON CONFLICT DO NOTHING
-""")
+user_table_insert = """
+INSERT INTO
+    users (user_id, first_name, last_name, gender, level)
+VALUES
+    (%s, %s, %s, %s, %s) ON CONFLICT (user_id)
+DO
+UPDATE
+SET
+    first_name = COALESCE(EXCLUDED.first_name, users.first_name),
+    last_name = COALESCE(EXCLUDED.last_name, users.last_name),
+    gender = COALESCE(EXCLUDED.gender, users.gender),
+    level = COALESCE(EXCLUDED.level, users.level)
+"""
 
-song_table_insert = ("""
-INSERT INTO songs (song_id, title, artist_id, year, duration) VALUES (%s, %s, %s, %s, %s)
-ON CONFLICT DO NOTHING
-""")
+song_table_insert = """
+INSERT INTO
+    songs (song_id, title, artist_id, year, duration)
+VALUES
+    (%s, %s, %s, %s, %s) ON CONFLICT (song_id)
+DO
+UPDATE
+SET
+    title = COALESCE(EXCLUDED.title, songs.title),
+    artist_id = COALESCE(EXCLUDED.artist_id, songs.artist_id),
+    year = COALESCE(EXCLUDED.year, songs.year),
+    duration = COALESCE(EXCLUDED.duration, songs.duration)
+"""
 
-artist_table_insert = ("""
-INSERT INTO artists (artist_id, name, location, latitude, longitude) VALUES (%s, %s, %s, %s, %s)
-ON CONFLICT DO NOTHING
-""")
+artist_table_insert = """
+INSERT INTO
+    artists (artist_id, name, location, latitude, longitude)
+VALUES
+    (%s, %s, %s, %s, %s) ON CONFLICT (artist_id)
+DO
+UPDATE
+SET
+    name = COALESCE(EXCLUDED.name, artists.name),
+    location = COALESCE(EXCLUDED.location, artists.location),
+    latitude = COALESCE(EXCLUDED.latitude, artists.latitude),
+    longitude = COALESCE(EXCLUDED.longitude, artists.longitude)
+"""
 
-time_table_insert = ("""
-INSERT INTO time (start_time, hour, day, week, month, year, weekday) VALUES (%s, %s, %s, %s, %s, %s, %s)
-ON CONFLICT DO NOTHING
-""")
+time_table_insert = """
+INSERT INTO
+    time (start_time, hour, day, week, month, year, weekday)
+VALUES
+    (%s, %s, %s, %s, %s, %s, %s) ON CONFLICT
+DO
+    NOTHING
+"""
 
 # FIND SONGS
 
-song_select = ("""
-SELECT songs.song_id, songs.artist_id
-FROM songs LEFT JOIN artists ON songs.artist_id = artists.artist_id
-WHERE songs.title = %s AND artists.name = %s AND songs.duration = %s
-""")
+song_select = """
+SELECT
+    songs.song_id,
+    songs.artist_id
+FROM
+    songs
+    LEFT JOIN artists ON songs.artist_id = artists.artist_id
+WHERE
+    songs.title = %s
+    AND artists.name = %s
+    AND songs.duration = %s
+"""
 
 # QUERY LISTS
 
